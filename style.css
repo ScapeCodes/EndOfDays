@@ -1,0 +1,386 @@
+/* --- Global Reset & Variables --- */
+:root {
+    --color-dark: #121212;
+    --color-accent: #07ce88; /* Biohazard Green */
+    --color-light: #ecf0f1;
+    --color-card-bg: rgba(20, 20, 20, 0.9); /* Slightly darker/less transparent */
+    --color-success: #2ecc71; 
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Roboto Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-light);
+    background-color: var(--color-dark);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+    /* --- NEW: Default green cursor style --- */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="%2307ce88" stroke-width="2"/></svg>'), auto; 
+}
+
+/* --- NEW: Custom Scrollbar Styles (Chrome/Edge/Safari) --- */
+body::-webkit-scrollbar {
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--color-dark);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: #05a06c; /* Slightly darker green on hover */
+}
+
+/* --- NEW: Custom Text Selection Color --- */
+::selection {
+    background: var(--color-accent); 
+    color: var(--color-dark); /* Highlighted text becomes dark */
+}
+::-moz-selection { /* Firefox compatibility */
+    background: var(--color-accent);
+    color: var(--color-dark);
+}
+
+/* --- Utility Classes --- */
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--color-light);
+}
+
+/* --- Navigation --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 2em;
+    color: var(--color-accent);
+    letter-spacing: 3px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+nav ul li a {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    color: var(--color-light);
+}
+
+.btn-discord {
+    background-color: #7289da; /* Keep Discord blue for branding */
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white !important;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.btn-discord:hover {
+    background-color: #5b6fb0;
+}
+
+
+/* --- Hero Section (Background Image) --- */
+.hero {
+    /* Removed background-image property */
+    background-color: var(--color-dark); /* Fallback */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding-top: 60px; 
+    overflow: hidden; /* Important for clean transitions */
+}
+
+/* Base style for all background slides */
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0; /* Starts hidden */
+    z-index: 0; /* Positioned behind content and overlay */
+    transition: opacity 2s ease-in-out; /* The fade transition */
+}
+
+/* Image URLs for each slide (***UPDATE IMAGE PATHS HERE***) */
+.bg-1 {
+    background-image: url('images/background1.jpg');
+    opacity: 1; /* Start with the first image visible */
+}
+.bg-2 {
+    background-image: url('images/background2.jpg');
+}
+.bg-3 {
+    background-image: url('images/background3.jpg');
+}
+.bg-4 {
+    background-image: url('images/background4.jpg');
+}
+.bg-5 {
+    background-image: url('images/background5.jpg');
+}
+.bg-6 {
+    background-image: url('images/background6.jpg');
+}
+
+/* The active class will be toggled by JavaScript */
+.hero-bg.active {
+    opacity: 1;
+}
+
+/* Overlay for darkening and the seamless bottom fade (REPLACED ::after) */
+.hero-overlay-fade {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Below content, above images */
+    
+    /* Gradient for Darkening and Fade */
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.6) 0%, /* Darkens the image across the top (60% opaque) */
+        rgba(0, 0, 0, 0.6) 70%,
+        var(--color-dark) 100% /* Fades directly into the section below */
+    );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Ensure content is on top of the gradient */
+    max-width: 800px;
+    padding: 20px;
+}
+
+/* Seamless Fade Effect on the bottom */
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    z-index: 1; 
+    
+    /* Gradient for Darkening and Fade */
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.5) 0%, 
+        rgba(0, 0, 0, 0.5) 70%,
+        var(--color-dark) 100% 
+    );
+}
+
+.hero-content h1 {
+    font-family: var(--font-heading);
+    font-size: 5em;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    /* --- UPDATED: Green Glow --- */
+    text-shadow: 0 0 10px var(--color-accent);
+}
+
+.hero-content h2 {
+    font-family: var(--font-body);
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: var(--color-light);
+    font-weight: 400;
+}
+
+.hero-content p {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+}
+
+.countdown {
+    font-family: var(--font-heading);
+    font-size: 2em;
+    color: var(--color-light);
+    padding: 10px 20px;
+    /* --- UPDATED: Green countdown background/border --- */
+    background: rgba(7, 206, 136, 0.1); 
+    border: 2px solid var(--color-accent);
+    display: inline-block;
+}
+
+/* --- Bento Grid Layout --- */
+.bento-grid-container {
+    padding: 50px 5%;
+    background-color: var(--color-dark);
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-auto-rows: minmax(200px, auto);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.bento-tile {
+    background-color: var(--color-card-bg);
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* --- UPDATED: Interactive cursor for tiles --- */
+    cursor: pointer; 
+}
+
+.bento-tile:hover {
+    transform: translateY(-5px);
+    /* --- UPDATED: Green glow on hover --- */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px var(--color-accent);
+}
+
+/* Tile Sizing for Bento Grid */
+.tile-sm {
+    grid-column: span 1;
+}
+
+.tile-md {
+    grid-column: span 2;
+}
+
+.tile-lg {
+    grid-column: span 4; 
+    min-height: 250px;
+}
+
+/* Tile Content Styling */
+.bento-tile h3 {
+    font-family: var(--font-heading);
+    color: var(--color-accent);
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.bento-tile p {
+    flex-grow: 1; 
+}
+
+.icon {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.btn-cta {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-dark); /* Button text is dark on green */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 700;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.btn-cta:hover {
+    background-color: #05a06c; /* Slightly darker green on hover */
+    color: var(--color-dark);
+}
+
+.status-tile .status-text {
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    color: var(--color-success); 
+}
+
+.learn-more {
+    font-size: 0.9em;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 20px 5%;
+    background: var(--color-card-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.8em;
+    color: #95a5a6;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    /* ... (Mobile styles remain the same for responsiveness) ... */
+    nav {
+        flex-direction: column;
+        padding: 10px 5%;
+    }
+
+    nav ul {
+        gap: 15px;
+        padding-top: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero-content h1 {
+        font-size: 3em;
+    }
+
+    .hero-content h2 {
+        font-size: 1.2em;
+    }
+
+    .bento-grid {
+        grid-template-columns: 1fr; 
+        grid-auto-rows: auto;
+    }
+
+    .tile-lg, .tile-md, .tile-sm {
+        grid-column: span 1; 
+    }
+}
